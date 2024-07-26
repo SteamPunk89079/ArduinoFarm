@@ -11,8 +11,6 @@ public class Com {
     private static SerialPort serialPort;
 
     public Com() {
-
-
         startSerialCom();
 
         for ( int i = 0 ; i < 20 ; i ++) {
@@ -22,6 +20,7 @@ public class Com {
         serialPort.closePort();
     }
 
+    
     public static String readDataRequest() {
         AtomicReference<String> receivedData = new AtomicReference<>("");
         CountDownLatch latch = new CountDownLatch(1);
@@ -106,5 +105,9 @@ public class Com {
             System.out.println("FAILED TO OPEN PORT");
         }
     }
+
+
+        
+    
 
 }
