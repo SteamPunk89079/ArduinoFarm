@@ -11,13 +11,8 @@ public class Com {
     private static SerialPort serialPort;
 
     public Com() {
-        startSerialCom();
+        
 
-        for ( int i = 0 ; i < 20 ; i ++) {
-            readDataRequest();
-        }
-
-        serialPort.closePort();
     }
 
     
@@ -35,7 +30,8 @@ public class Com {
                     new_line = reader.readLine();
                     sendDataRequest();
                     receivedData.set(new_line);
-                    System.out.println("Received: " + new_line);
+
+                    //System.out.println("Received: " + new_line);
                     latch.countDown(); // Signal that data has been received
                     break; // Exit loop after receiving data
                 }
@@ -93,7 +89,7 @@ public class Com {
         }
     }
 
-    public static void startSerialCom() {
+    public void startSerialCom() {
         serialPort = SerialPort.getCommPort("COM3");
         serialPort.setComPortParameters(9600, 8, 1, 0);
         serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 2000, 0);
@@ -106,7 +102,9 @@ public class Com {
         }
     }
 
-
+    public void close_serial_port(){
+        serialPort.closePort();
+    }
         
     
 
