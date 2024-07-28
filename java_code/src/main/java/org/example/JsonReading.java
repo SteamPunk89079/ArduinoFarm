@@ -12,7 +12,7 @@ public class JsonReading {
 
 
         ArrayList<String> values = processReading(input_string);
-        READING = package_data(values);
+        //READING = package_data(values);
 
         //READING = interpretReading();
 
@@ -24,12 +24,20 @@ public class JsonReading {
   
 
 
-    private static Reading package_data (ArrayList<String> processed_data){
-        Reading packaged_reading = new Reading(processed_data.get(0),processed_data.get(1),
-                processed_data.get(2),processed_data.get(3),processed_data.get(4),processed_data.get(5),
-                processed_data.get(6),processed_data.get(7));
+    private void package_data (ArrayList<String> processed_data){
+        String date, time, temp1, temp2, temp3, hum1, hum2, hum3;
+        date = processed_data.get(0);
+        time = processed_data.get(1);
+        temp1 = processed_data.get(2);
+        hum1 = processed_data.get(3);
+        temp2 = processed_data.get(4);
+        hum2 = processed_data.get(5);
+        temp3 = processed_data.get(6);
+        hum3 = processed_data.get(7);
 
-        return packaged_reading;
+        Reading new_reading = new Reading(date, time, temp1, hum1, temp2, hum2, temp3, hum3);
+
+        READING = new_reading;
     }
 
     private ArrayList<String> processReading(String reading) {
