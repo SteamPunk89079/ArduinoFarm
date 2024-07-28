@@ -6,18 +6,22 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import com.fazecast.jSerialComm.*;
 
+
 public class Com {
+
+    private static AtomicReference<String> receivedData = new AtomicReference<>("");
 
     private static SerialPort serialPort;
 
+    
     public Com() {
         
-
+        startSerialCom();
+        
     }
 
     
     public static String readDataRequest() {
-        AtomicReference<String> receivedData = new AtomicReference<>("");
         CountDownLatch latch = new CountDownLatch(1);
 
         Thread readerThread = new Thread(() -> {
@@ -52,27 +56,6 @@ public class Com {
 
         return receivedData.get();
 
-
-        /*String line = "";
-
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(serialPort.getInputStream()))) {
-
-
-            while ((line = reader.readLine()) != null) {
-
-                sendDataRequest();
-                receivedData.set(line);
-                System.out.println("Received: " + line);
-                latch.countDown(); // Signal that data has been received
-                break; // Exit loop after receiving data
-            }
-        } catch (IOException e) {
-            System.out.println("Timeout error");
-            throw new RuntimeException(e);
-        }
-
-        return line;*/
     }
 
     public static void sendDataRequest() {

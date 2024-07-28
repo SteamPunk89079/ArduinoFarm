@@ -4,36 +4,24 @@ import java.util.ArrayList;
 
 public class JsonReading {
 
-    private static String reading;
+    private static String inputString;
 
     private Reading READING;
 
-    public JsonReading(String reading){
-        this.reading = reading;
+    public JsonReading(String input_string){
 
-        READING = interpretReading();
+
+        ArrayList<String> values = processReading(input_string);
+        READING = package_data(values);
+
+        //READING = interpretReading();
 
         //System.out.println(READING.toString());
 
 
     }
 
-    public Reading interpretReading(){
-
-        Reading READING = null;
-        if (isValidReading(reading)) {
-            System.out.println("Valid data string.");
-
-            ArrayList<String> processed_data = processReading(reading);
-            READING = package_data(processed_data);
-
-
-            return READING;
-        } else {
-            System.out.println("Invalid data string");
-        }
-        return READING;
-    }
+  
 
 
     private static Reading package_data (ArrayList<String> processed_data){
@@ -44,7 +32,7 @@ public class JsonReading {
         return packaged_reading;
     }
 
-    private static ArrayList<String> processReading(String reading) {
+    private ArrayList<String> processReading(String reading) {
         char character;
         int quoteNumber = 0;
         StringBuilder date = new StringBuilder();
@@ -58,114 +46,120 @@ public class JsonReading {
         int informations_collected = 0;
 
         //--------------------LOOP----------------------------------------------
-        for (int i = 0; i < reading.length(); i++) {
-            character = reading.charAt(i);
-
-            if (character == '\"') {
-                quoteNumber++;
-            }
-
-            switch (informations_collected) {
-                case 0:
-                    if (quoteNumber == 5) {
-                        //---------------------DATE-TIME------------------------
-                        int startDateIndex = i + 1;
-                        int endDateIndex = reading.indexOf('\"', startDateIndex);
-
-                        if (endDateIndex != -1) {
-                            String dateTimeStr = reading.substring(startDateIndex, endDateIndex);
-                            String[] dateTimeParts = dateTimeStr.split(" \\|\\| ");
-
-                            if (dateTimeParts.length == 2) {
-                                date.append(dateTimeParts[0]);
-                                time.append(dateTimeParts[1]);
+        if (reading != null){
+            for (int i = 0; i < reading.length(); i++) {
+                character = reading.charAt(i);
+    
+                if (character == '\"') {
+                    quoteNumber++;
+                }
+    
+                switch (informations_collected) {
+                    case 0:
+                        if (quoteNumber == 5) {
+                            //---------------------DATE-TIME------------------------
+                            int startDateIndex = i + 1;
+                            int endDateIndex = reading.indexOf('\"', startDateIndex);
+    
+                            if (endDateIndex != -1) {
+                                String dateTimeStr = reading.substring(startDateIndex, endDateIndex);
+                                String[] dateTimeParts = dateTimeStr.split(" \\|\\| ");
+    
+                                if (dateTimeParts.length == 2) {
+                                    date.append(dateTimeParts[0]);
+                                    time.append(dateTimeParts[1]);
+                                }
+                                quoteNumber = 0;
+                                informations_collected++;
                             }
-                            quoteNumber = 0;
-                            informations_collected++;
                         }
-                    }
-                    break;
-                case 1:
-                    if (quoteNumber == 7) {
-                        //----------------------TEMP-1---------------------------------
-                        int startTempIndex = i + 2;
-                        int endTempIndex = reading.indexOf('\"', startTempIndex);
-
-                        if (endTempIndex != -1) {
-                            temp1.append(reading.substring(startTempIndex, endTempIndex - 1));
-                            quoteNumber = 0;
-                            informations_collected++;
+                        break;
+                    case 1:
+                        if (quoteNumber == 7) {
+                            //----------------------TEMP-1---------------------------------
+                            int startTempIndex = i + 2;
+                            int endTempIndex = reading.indexOf('\"', startTempIndex);
+    
+                            if (endTempIndex != -1) {
+                                temp1.append(reading.substring(startTempIndex, endTempIndex - 1));
+                                quoteNumber = 0;
+                                informations_collected++;
+                            }
                         }
-                    }
-                    break;
-                case 2:
-                    if (quoteNumber == 2) {
-                        //-----------------------HUM-1----------------------------------------
-                        int startHumIndex = i + 2;
-                        int endHumIndex = reading.indexOf('\"', startHumIndex);
-
-                        if (endHumIndex != -1) {
-                            hum1.append(reading.substring(startHumIndex, endHumIndex - 2));
-                            quoteNumber = 0;
-                            informations_collected++;
+                        break;
+                    case 2:
+                        if (quoteNumber == 2) {
+                            //-----------------------HUM-1----------------------------------------
+                            int startHumIndex = i + 2;
+                            int endHumIndex = reading.indexOf('\"', startHumIndex);
+    
+                            if (endHumIndex != -1) {
+                                hum1.append(reading.substring(startHumIndex, endHumIndex - 2));
+                                quoteNumber = 0;
+                                informations_collected++;
+                            }
                         }
-                    }
-                    break;
-                case 3:
-                    if (quoteNumber == 6) {
-                        //---------------------------TEMP-2-------------------------------------
-                        int startTemp2Index = i + 2;
-                        int endTemp2Index = reading.indexOf('\"', startTemp2Index);
-
-                        if (endTemp2Index != -1) {
-                            temp2.append(reading.substring(startTemp2Index, endTemp2Index - 1));
-                            quoteNumber = 0;
-                            informations_collected++;
+                        break;
+                    case 3:
+                        if (quoteNumber == 6) {
+                            //---------------------------TEMP-2-------------------------------------
+                            int startTemp2Index = i + 2;
+                            int endTemp2Index = reading.indexOf('\"', startTemp2Index);
+    
+                            if (endTemp2Index != -1) {
+                                temp2.append(reading.substring(startTemp2Index, endTemp2Index - 1));
+                                quoteNumber = 0;
+                                informations_collected++;
+                            }
                         }
-                    }
-                    break;
-                case 4:
-                    if (quoteNumber == 2) {
-                        //----------------------------HUM-2----------------------------------
-                        int startHum2Index = i + 2;
-                        int endHum2Index = reading.indexOf('\"', startHum2Index);
-
-                        if (endHum2Index != -1) {
-                            hum2.append(reading.substring(startHum2Index, endHum2Index - 2));
-                            quoteNumber = 0;
-                            informations_collected++;
+                        break;
+                    case 4:
+                        if (quoteNumber == 2) {
+                            //----------------------------HUM-2----------------------------------
+                            int startHum2Index = i + 2;
+                            int endHum2Index = reading.indexOf('\"', startHum2Index);
+    
+                            if (endHum2Index != -1) {
+                                hum2.append(reading.substring(startHum2Index, endHum2Index - 2));
+                                quoteNumber = 0;
+                                informations_collected++;
+                            }
                         }
-                    }
-                    break;
-                case 5:
-                    if (quoteNumber == 6) {
-                        //---------------------------TEMP-3-------------------------------------
-                        int startTemp3Index = i + 2;
-                        int endTemp3Index = reading.indexOf('\"', startTemp3Index);
-
-                        if (endTemp3Index != -1) {
-                            temp3.append(reading.substring(startTemp3Index, endTemp3Index - 1));
-                            quoteNumber = 0;
-                            informations_collected++;
+                        break;
+                    case 5:
+                        if (quoteNumber == 6) {
+                            //---------------------------TEMP-3-------------------------------------
+                            int startTemp3Index = i + 2;
+                            int endTemp3Index = reading.indexOf('\"', startTemp3Index);
+    
+                            if (endTemp3Index != -1) {
+                                temp3.append(reading.substring(startTemp3Index, endTemp3Index - 1));
+                                quoteNumber = 0;
+                                informations_collected++;
+                            }
                         }
-                    }
-                    break;
-                case 6:
-                    if (quoteNumber == 2) {
-                        //----------------------------HUM-3----------------------------------
-                        int startHum3Index = i + 2;
-                        int endHum3Index = reading.indexOf('}', startHum3Index);
-
-                        if (endHum3Index != -1) {
-                            hum3.append(reading.substring(startHum3Index, endHum3Index));
-                            quoteNumber = 0;
-                            informations_collected++;
+                        break;
+                    case 6:
+                        if (quoteNumber == 2) {
+                            //----------------------------HUM-3----------------------------------
+                            int startHum3Index = i + 2;
+                            int endHum3Index = reading.indexOf('}', startHum3Index);
+    
+                            if (endHum3Index != -1) {
+                                hum3.append(reading.substring(startHum3Index, endHum3Index));
+                                quoteNumber = 0;
+                                informations_collected++;
+                            }
                         }
-                    }
-                    break;
+                        break;
+                }
             }
+        }else{
+            System.out.println("NULL STRING");
         }
-/*
+        
+        /*
+
         System.out.println("Extracted date: " + date.toString());
         System.out.println("Extracted time: " + time.toString());
         System.out.println("Extracted temp1: " + temp1.toString());
@@ -174,7 +168,8 @@ public class JsonReading {
         System.out.println("Extracted hum2: " + hum2.toString());
         System.out.println("Extracted temp3: " + temp3.toString());
         System.out.println("Extracted hum3: " + hum3.toString());
-*/
+        */
+        
         ArrayList<String> data = new ArrayList<>();
         data.add(String.valueOf(date));
         data.add(String.valueOf(time));
@@ -194,13 +189,23 @@ public class JsonReading {
         return data;
 
     }
-    private static boolean isValidReading(String reading) {
-        return reading.contains("date") && reading.contains("sensor1") && reading.contains("sensor2")
+
+
+    private static boolean isValidReading(String reading){
+        boolean valid = false;
+        if (reading != null){
+            if (reading.contains("date") && reading.contains("sensor1") && reading.contains("sensor2")
                 && reading.contains("sensor3") && reading.contains("temp") && reading.contains("temp2")
                 && reading.contains("temp3") && reading.contains("hum") && reading.contains("hum2")
-                && reading.contains("hum3");
+                && reading.contains("hum3")){
+                    valid = true;
+                }else {System.out.println("NULL string");}
+        }
+        return valid;
     }
-
+    
+    
+    
     public Reading getREADING() {
         return READING;
     }

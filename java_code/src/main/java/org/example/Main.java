@@ -1,5 +1,7 @@
 package org.example;
 
+import javax.print.DocFlavor.READER;
+
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
@@ -7,18 +9,27 @@ public class Main {
 
         Com com = new Com();
 
+        String line1 = Com.readDataRequest();
+        String line2 = Com.readDataRequest();
+        String line3 = Com.readDataRequest();
 
-        com.startSerialCom();
+        System.out.println(line1);
+        System.out.println(line2);
+        System.out.println(line3);
 
-        String line = com.readDataRequest();
+        JsonReading reading_raw_1 = new JsonReading(line1);
+        JsonReading reading_raw_2 = new JsonReading(line2);
+        JsonReading reading_raw_3 = new JsonReading(line3);
 
-        System.out.println(line);
+        Reading reading1 = reading_raw_1.getREADING();
+        Reading reading2 = reading_raw_2.getREADING();
+        Reading reading3 = reading_raw_3.getREADING();
 
-        line = com.readDataRequest();
+        System.out.println("-----------------------------------");
 
-        JsonReading my_Reading = new JsonReading(line);
-        Reading reading = my_Reading.interpretReading();
-        System.out.println(reading.toString());
+        System.out.println("READING1 :"+reading1.toString());
+        System.out.println("READING2 :"+reading2.toString());
+        System.out.println("READING3 :"+reading3.toString());
 
         com.close_serial_port();
     }
