@@ -4,14 +4,13 @@ import java.util.ArrayList;
 
 public class JsonReading {
 
-    private static String inputString;
-
-    private Reading READING;
+    String input_string;
 
     public JsonReading(String input_string){
 
+        this.input_string = input_string;
 
-        ArrayList<String> values = processReading(input_string);
+
         //READING = package_data(values);
 
         //READING = interpretReading();
@@ -24,7 +23,7 @@ public class JsonReading {
   
 
 
-    private void package_data (ArrayList<String> processed_data){
+    private Reading package_data (ArrayList<String> processed_data){
         String date, time, temp1, temp2, temp3, hum1, hum2, hum3;
         date = processed_data.get(0);
         time = processed_data.get(1);
@@ -37,7 +36,7 @@ public class JsonReading {
 
         Reading new_reading = new Reading(date, time, temp1, hum1, temp2, hum2, temp3, hum3);
 
-        READING = new_reading;
+        return new_reading;
     }
 
     private ArrayList<String> processReading(String reading) {
@@ -188,18 +187,33 @@ public class JsonReading {
         data.add(String.valueOf(temp3));
         data.add(String.valueOf(hum3));
 
-/*
+    /*
         for (String _data : data){
             System.out.println(_data);
-        }
+        } 
     }
-*/
+    */
+        
         return data;
 
     }
 
 
-    private static boolean isValidReading(String reading){
+    public Reading getREADING() {
+        
+        ArrayList<String> values = processReading(input_string);
+        for (String data : values){
+            System.out.print(data + " " + data.getClass());
+            System.out.println();
+        }
+
+        Reading READING = package_data(values);
+
+        return READING;
+    }
+
+    
+    /*private static boolean isValidReading(String reading){
         boolean valid = false;
         if (reading != null){
             if (reading.contains("date") && reading.contains("sensor1") && reading.contains("sensor2")
@@ -211,10 +225,7 @@ public class JsonReading {
         }
         return valid;
     }
+    */
     
     
-    
-    public Reading getREADING() {
-        return READING;
-    }
 }

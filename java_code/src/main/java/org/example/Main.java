@@ -1,6 +1,5 @@
 package org.example;
 
-import javax.print.DocFlavor.READER;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -30,6 +29,9 @@ public class Main {
         System.out.println("READING1 :"+reading1.toString());
         System.out.println("READING2 :"+reading2.toString());
         System.out.println("READING3 :"+reading3.toString());
+
+        System.out.println("-----------------------------------");
+
 
         com.close_serial_port();
     }
