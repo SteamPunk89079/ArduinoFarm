@@ -30,6 +30,9 @@ public class Reading {
             System.out.println("PACKAGING ERROR");
         }
     }
+    public Reading(){
+    }
+    
 
     @Override
     public String toString() {

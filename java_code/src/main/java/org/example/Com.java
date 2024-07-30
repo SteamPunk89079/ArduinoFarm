@@ -30,7 +30,7 @@ public class Com {
 
                 String line;
                 String new_line;
-                while ((line = reader.readLine()) != null) {
+                while ((line = reader.readLine()) != null) {//REVISIT
                     new_line = reader.readLine();
                     sendDataRequest();
                     receivedData.set(new_line);
@@ -63,8 +63,9 @@ public class Com {
              BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream))) {
 
             writer.write('1');
-            System.out.println("data request sent\n"+
-                    "---------------------");
+            //System.out.println("data request sent\n"+
+            //        "---------------------");
+            System.out.println("------------------------------------------------");
             writer.flush();
 
         } catch (IOException e) {

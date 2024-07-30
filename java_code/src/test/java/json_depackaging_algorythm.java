@@ -1,8 +1,10 @@
-package org.example;
+
 
 import java.util.ArrayList;
 
-public class TEST_CLASS {
+import org.example.Reading;
+
+public class json_depackaging_algorythm {
 
     public static void main(String[] args) {
 

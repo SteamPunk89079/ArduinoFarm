@@ -202,10 +202,10 @@ public class JsonReading {
     public Reading getREADING() {
         
         ArrayList<String> values = processReading(input_string);
-        for (String data : values){
+        /*for (String data : values){
             System.out.print(data + " " + data.getClass());
             System.out.println();
-        }
+        }*/
 
         Reading READING = package_data(values);
 
