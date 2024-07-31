@@ -14,9 +14,14 @@ public class Com {
     private static SerialPort serialPort;
 
     
-    public Com() {
+    public Com() throws SerialPortException{
         
-        startSerialCom();
+        try {
+            startSerialCom();            
+        } catch (SerialPortException e) {
+            System.err.println("Failed to initialize serial communication: " + e.getMessage());
+
+        }
         
     }
 
@@ -73,23 +78,31 @@ public class Com {
         }
     }
 
-    public void startSerialCom() {
+    public void startSerialCom() throws SerialPortException{
         serialPort = SerialPort.getCommPort("COM3");
         serialPort.setComPortParameters(9600, 8, 1, 0);
         serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 2000, 0);
 
-
-        if (serialPort.openPort()) {
-            System.out.println("---------------------\n"+"PORT OPENED");
-        } else {
-            System.out.println("FAILED TO OPEN PORT");
+        try {
+            if (serialPort.openPort()) {
+                System.out.println("---------------------\n" + "PORT OPENED");
+            } else {
+                throw new SerialPortException();
+            }
+        } catch (SerialPortException e) {
+            System.err.println("Error while opening the serial port: " + e.getMessage());
+            throw e; // rethrow the exception after logging
         }
+
     }
 
     public void close_serial_port(){
         serialPort.closePort();
     }
-        
+    
+    class SerialPortException extends Exception{
+
+    }
     
 
 }

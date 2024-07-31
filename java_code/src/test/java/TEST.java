@@ -5,10 +5,12 @@ import org.example.Com;
 import org.example.JsonReading;
 import org.example.Reading;
 
-public class TEST {
-    public static void main(String[] args) {
+import com.fazecast.jSerialComm.SerialPortIOException;
 
-        Com com = new Com();
+public class TEST {
+    public static void main(String[] args) throws SerialPortIOException {
+
+        //Com com = new Com();
 
         String line1 = Com.readDataRequest();
         String line2 = Com.readDataRequest();
@@ -35,6 +37,6 @@ public class TEST {
         System.out.println("-----------------------------------");
 
 
-        com.close_serial_port();
+        //com.close_serial_port();
     }
 }
