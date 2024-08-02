@@ -36,6 +36,11 @@ public class MyPanel extends JPanel {
 
     Com com;
 
+    private double max_temp = 999; private double min_temp = -10;
+    String degreeSymbol = "\u00B0";
+
+    JDialog notificationDialog = new JDialog();
+
     public MyPanel() {
         this.setPreferredSize(new Dimension(1100, 800));
         this.setBackground(Color.green);
@@ -76,6 +81,28 @@ public class MyPanel extends JPanel {
                     
                     package_number = package_number.add(BigInteger.ONE);
                     Reading reading = request_reading(1);
+
+                    if (get_medium_temp(reading) > max_temp){
+
+                        System.out.println("Max temp exceded");
+                        add_text_to_screen(3, reading);
+                        JOptionPane.showMessageDialog(notificationDialog, 
+                            "Temperature exceeding :"+max_temp+degreeSymbol+"/n"+
+                            "current temperature :"+get_medium_temp(reading)+degreeSymbol, 
+                            "Max temp exceeded", 
+                            JOptionPane.ERROR_MESSAGE);
+                    }
+                    if (get_medium_temp(reading) < min_temp){
+
+                        System.out.println("Min temp exceded");
+                        add_text_to_screen(4, reading);
+                        JOptionPane.showMessageDialog(notificationDialog, 
+                        "Temperature below :"+min_temp+degreeSymbol+"/n"+
+                        "current temperature :"+get_medium_temp(reading)+degreeSymbol, 
+                        "Max temp exceeded", 
+                        JOptionPane.ERROR_MESSAGE);
+                    }
+
                     add_text_to_screen(1, reading);
                     nr_prints_onscreen ++;                
                     try {
@@ -88,6 +115,36 @@ public class MyPanel extends JPanel {
                     SCREEN.setText("");
                 }
             }
+        }
+    }
+
+    protected Double get_medium_temp(Reading reading){
+        double temp1, temp2, temp3;
+        
+        temp1 = parseDouble(reading.getTemp1());
+        temp2 = parseDouble(reading.getTemp2());
+        temp3 = parseDouble(reading.getTemp3());
+        return (temp1 + temp2 + temp3)/3;
+    }
+    protected Double get_medium_hum(Reading reading){
+        double hum1, hum2, hum3;
+        
+        hum1 = parseDouble(reading.getHum1());
+        hum2 = parseDouble(reading.getHum2());
+        hum3 = parseDouble(reading.getHum3());
+        return (hum1 + hum2 + hum3)/3;
+    }
+    public static Double parseDouble(String str) {
+        if (str == null || str.trim().isEmpty()) {
+            System.err.println("Input string is null or empty.");
+            return null;
+        }
+
+        try {
+            return Double.parseDouble(str.trim());
+        } catch (NumberFormatException e) {
+            System.err.println("Error: '" + str + "' is not a valid number.");
+            return null;
         }
     }
 
@@ -134,39 +191,82 @@ public class MyPanel extends JPanel {
     }
 
 
-    private void show_settings_dialog(){
+    private void show_settings_dialog() {
         JDialog settingsDialog = new JDialog();
-        JTextField max_tf = new JTextField("degrees");
-        JTextField min_tf = new JTextField("degrees");
-        settingsDialog.setSize(300, 200);
-        settingsDialog.setLayout(new GridLayout(3, 2));
-
-        settingsDialog.add(new JLabel("Max temperature:"));
-        settingsDialog.add(max_tf);
-
-        settingsDialog.add(new JLabel("Min temperature:"));
-        settingsDialog.add(min_tf);
+        JTextField max_tf = new JTextField();
+        JTextField min_tf = new JTextField();
         
 
-        JButton SaveButton = new JButton("SAVE");
-        SaveButton.addActionListener(new ActionListener() {
+        settingsDialog.setSize(300, 200);
+        settingsDialog.setLayout(new GridLayout(3, 2));
+    
+        settingsDialog.add(new JLabel("       Max temperature:"));
+        settingsDialog.add(max_tf);
+    
+        settingsDialog.add(new JLabel("       Min temperature:"));
+        settingsDialog.add(min_tf);
+        
+        JButton saveButton = new JButton("SAVE");
+        saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                settingsDialog.dispose(); 
+                try {
+                    double maxTemp = Double.parseDouble(max_tf.getText());
+                    double minTemp = Double.parseDouble(min_tf.getText());
+                    // Implement the logic to use maxTemp and minTemp
+                    System.out.println("Max Temp: " + maxTemp + ", Min Temp: " + minTemp);
+                    settingsDialog.dispose();
+                    max_temp = maxTemp; min_temp = minTemp; 
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(settingsDialog, 
+                        "Please enter valid numeric values.", 
+                        "Input Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
-        JButton ExitButton = new JButton("EXIT");
-        ExitButton.addActionListener(new ActionListener() {
+    
+        JButton exitButton = new JButton("EXIT");
+        exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 settingsDialog.dispose();
             }
         });
-        
-        settingsDialog.add(SaveButton);settingsDialog.add(ExitButton);
+    
+        settingsDialog.add(saveButton);
+        settingsDialog.add(exitButton);
         settingsDialog.setLocationRelativeTo(this);
         settingsDialog.setVisible(true);
+    }
+    
+    public void configureTextField(JTextField textField) {
+        textField.setFont(new Font("Arial", Font.PLAIN, 14));
+        textField.setForeground(Color.WHITE);
+        textField.setBackground(new Color(60, 63, 65));
+        textField.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.BLACK, 1),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)
+        ));
+    }
 
+    public void configureButton(JButton button, Font font, Color backgroundColor, Color textColor, Border border, Color hoverColor) {
+        button.setFont(font);
+        button.setBackground(backgroundColor);
+        button.setForeground(textColor);
+        button.setBorder(border);
+        button.setFocusPainted(false);
+        
+        // Add hover effect
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(hoverColor);
+            }
+    
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(backgroundColor);
+            }
+        });
     }
 
     
@@ -179,27 +279,20 @@ public class MyPanel extends JPanel {
         SCREEN.setBackground(Color.gray);
         SCREEN.setColumns(80);
         SCREEN.setRows(18);
-
     }
 
     public void button_setup() {
         Font font = new Font("Arial", Font.BOLD, 14);
-
         Color backgroundColor = new Color(60, 63, 65); // Dark gray
         Color textColor = Color.WHITE; // White text
         Color hoverColor = new Color(80, 80, 80); // Lighter gray for hover
-
-
         Border border = BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(Color.BLACK, 2), // Outer border
             BorderFactory.createEmptyBorder(5, 10, 5, 10) // Padding
         );
-
         configureButton(btn_continous_scan, font, backgroundColor, textColor, border, hoverColor);
         configureButton(btn_stop_scan, font, backgroundColor, textColor, border, hoverColor);
         configureButton(btn_settings, font, backgroundColor, textColor, border, hoverColor);
-    
-        
     }
   
     public void background_setup() {
@@ -207,27 +300,7 @@ public class MyPanel extends JPanel {
         repaint();
     }
 
-    private void configureButton(JButton button, Font font, Color backgroundColor, Color textColor, Border border, Color hoverColor) {
-        button.setPreferredSize(new Dimension(120, 40));
-        button.setFont(font);
-        button.setBackground(backgroundColor);
-        button.setForeground(textColor);
-        button.setBorder(border);
-        button.setFocusPainted(false);
-    
-        // Add a hover effect using mouse listeners
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent e) {
-                button.setBackground(hoverColor);
-            }
-    
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent e) {
-                button.setBackground(backgroundColor);
-            }
-        });
-    }
+
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -266,13 +339,19 @@ public class MyPanel extends JPanel {
             +reading.toString();
             SCREEN.setText(SCREEN.getText()+ text +"\n");
             
-        }
-
-        if (code == 2){
+        }else if (code == 2){
             text = "------------------------------------------------"+"\n"
             +"Unable to establish hardware connection";
             SCREEN.setText(SCREEN.getText()+ text +"\n");
             
+        }else if (code == 3){
+            text =  "------------------------------------------------"+"\n"
+            +"MAX TEMP EXCEDED";
+            SCREEN.setText(SCREEN.getText()+ text +"\n");
+        }else if (code == 4){
+            text =  "------------------------------------------------"+"\n"
+            +"MIN TEMP EXCEDED";
+            SCREEN.setText(SCREEN.getText()+ text +"\n");
         }
 
 

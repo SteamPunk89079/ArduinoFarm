@@ -7,6 +7,7 @@ public class Reading {
     private String date, time, temp1, hum1, temp2, hum2, temp3, hum3;
 
 
+    
     public Reading(String date, String time, String temp1, String hum1,
                    String temp2, String hum2, String temp3, String hum3) {
         if (date != null && !date.isEmpty() && 
@@ -46,5 +47,28 @@ public class Reading {
     }
 
 
-
+    public String getDate() {
+        return date;
+    }
+    public String getTime() {
+        return time;
+    }
+    public String getTemp1() {
+        return temp1;
+    }
+    public String getHum1() {
+        return hum1;
+    }
+    public String getTemp2() {
+        return temp2;
+    }
+    public String getHum2() {
+        return hum2;
+    }
+    public String getTemp3() {
+        return temp3;
+    }
+    public String getHum3() {
+        return hum3;
+    }
 }
